@@ -9,6 +9,10 @@ enum PreviewFactory {
     static func view(for url: URL, size: NSSize) -> NSView {
         let frame = NSRect(origin: .zero, size: size)
 
+        if (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true {
+            return FolderPreview(url: url, frame: frame)
+        }
+
         if let type = type(of: url), type.conforms(to: .audiovisualContent) {
             return VideoPreview(url: url, frame: frame)
         }
