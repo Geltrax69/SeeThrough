@@ -8,6 +8,11 @@ enum PreviewFactory {
     @MainActor
     static func view(for url: URL, size: NSSize) -> NSView {
         let frame = NSRect(origin: .zero, size: size)
+
+        if let type = type(of: url), type.conforms(to: .audiovisualContent) {
+            return VideoPreview.view(for: url, frame: frame)
+        }
+
         let ql = QLPreviewView(frame: frame, style: .normal) ?? QLPreviewView()
         ql.previewItem = url as QLPreviewItem
         ql.autoresizingMask = [.width, .height]
