@@ -36,6 +36,11 @@ enum Settings {
         set { defaults.set(newValue.rawValue, forKey: "hotKey") }
     }
 
+    static var spaceInFinder: Bool {
+        get { defaults.bool(forKey: "spaceInFinder") }
+        set { defaults.set(newValue, forKey: "spaceInFinder") }
+    }
+
     static var muteVideo: Bool {
         get { defaults.object(forKey: "muteVideo") as? Bool ?? true }
         set { defaults.set(newValue, forKey: "muteVideo") }

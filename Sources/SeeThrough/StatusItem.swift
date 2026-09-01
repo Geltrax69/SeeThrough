@@ -1,4 +1,5 @@
 import AppKit
+import ApplicationServices
 
 /// The app has no Dock icon, so this is both the "yes, it is running" signal
 /// and the only place to change anything.
@@ -6,11 +7,11 @@ import AppKit
 final class StatusItem: NSObject, NSMenuDelegate {
     private let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let onPreview: () -> Void
-    private let onHotKeyChange: () -> Void
+    private let onSettingsChange: () -> Void
 
-    init(onPreview: @escaping () -> Void, onHotKeyChange: @escaping () -> Void) {
+    init(onPreview: @escaping () -> Void, onSettingsChange: @escaping () -> Void) {
         self.onPreview = onPreview
-        self.onHotKeyChange = onHotKeyChange
+        self.onSettingsChange = onSettingsChange
         super.init()
 
         item.button?.image = NSImage(systemSymbolName: "eye", accessibilityDescription: "SeeThrough")
@@ -42,6 +43,14 @@ final class StatusItem: NSObject, NSMenuDelegate {
         hotKeyItem.submenu = hotKeyMenu
         menu.addItem(hotKeyItem)
 
+        let space = NSMenuItem(title: "Use Space in Finder", action: #selector(toggleSpace), keyEquivalent: "")
+        space.target = self
+        space.state = Settings.spaceInFinder ? .on : .off
+        if Settings.spaceInFinder, !AXIsProcessTrusted() {
+            space.title = "Use Space in Finder — needs Accessibility"
+        }
+        menu.addItem(space)
+
         let mute = NSMenuItem(title: "Mute Video Previews", action: #selector(toggleMute), keyEquivalent: "")
         mute.target = self
         mute.state = Settings.muteVideo ? .on : .off
@@ -68,7 +77,13 @@ final class StatusItem: NSObject, NSMenuDelegate {
         guard let raw = sender.representedObject as? String,
               let choice = HotKeyChoice(rawValue: raw) else { return }
         Settings.hotKey = choice
-        onHotKeyChange()
+        onSettingsChange()
+    }
+
+    @objc private func toggleSpace() {
+        Settings.spaceInFinder.toggle()
+        if Settings.spaceInFinder, !AXIsProcessTrusted() { SpaceTap.requestAccess() }
+        onSettingsChange()
     }
 
     @objc private func toggleMute() { Settings.muteVideo.toggle() }

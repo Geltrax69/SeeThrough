@@ -24,11 +24,36 @@ Look for the **eye icon in the menu bar**. That icon is the whole control panel:
 
 - **Preview Finder Selection** — same as the hotkey, for when you forget it
 - **Hotkey** — ⌥Space, ⌃Space or ⌘⇧Space
+- **Use Space in Finder** — plain Space, no modifier (see below)
 - **Mute Video Previews** — on by default
 - **Open at Login**
 - **Quit SeeThrough**
 
 There is no Dock icon and no preferences window; the menu is it.
+
+## Plain Space
+
+Finder's Space cannot be disabled — Quick Look is handled inside Finder, and
+nothing you install gets asked first. The only way to win the key is to sit
+above every app with a `CGEventTap` and swallow the keystroke before Finder
+sees it. That is what **Use Space in Finder** does.
+
+It needs **Accessibility** permission, because a tap that can swallow a
+keystroke can also read every keystroke. Turning the toggle on brings up the
+system prompt; grant it in System Settings → Privacy & Security →
+Accessibility, then quit and relaunch SeeThrough.
+
+The tap is deliberately narrow:
+
+- only `keyDown`
+- only keycode 49 (Space)
+- only with **no** modifiers held
+- only while **Finder** is the frontmost app
+- and never when the focused element is a text field — so renaming a file or
+  typing in Finder's search box still gets a normal space
+
+Everything else passes straight through untouched. macOS disables a tap that
+responds too slowly; SeeThrough re-arms itself when that happens.
 
 ## Build
 
@@ -54,4 +79,6 @@ selection; decline it and the panel just says nothing is selected.
 
 - No drill-down into subfolders or archive members yet.
 - Three preset hotkeys, no free-form key recorder.
+- Because the app is only ad-hoc signed, macOS may forget the Accessibility
+  grant after you install a new build. Re-grant it if Space stops working.
 - tar members list without sizes.
