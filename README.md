@@ -18,14 +18,25 @@ so SeeThrough uses its own hotkey instead.
 | **Zip / tar / tar.gz** | Member list with sizes, read from the central directory. A 7GB archive opens instantly, nothing is extracted. |
 | **Everything else** | Falls through to Quick Look itself, which already handles images, PDFs, text and code. |
 
+## Is it running?
+
+Look for the **eye icon in the menu bar**. That icon is the whole control panel:
+
+- **Preview Finder Selection** — same as the hotkey, for when you forget it
+- **Hotkey** — ⌥Space, ⌃Space or ⌘⇧Space
+- **Mute Video Previews** — on by default
+- **Open at Login**
+- **Quit SeeThrough**
+
+There is no Dock icon and no preferences window; the menu is it.
+
 ## Build
 
 ```bash
 ./build.sh && open SeeThrough.app
 ```
 
-Runs as a background app — no Dock icon, no menu bar item. Quit it with
-`pkill -f SeeThrough.app`.
+Runs as a background app — no Dock icon. Quit it from the menu bar icon.
 
 ## Requirements
 
@@ -42,5 +53,5 @@ selection; decline it and the panel just says nothing is selected.
 ## Known gaps
 
 - No drill-down into subfolders or archive members yet.
-- The hotkey is fixed at ⌥Space.
+- Three preset hotkeys, no free-form key recorder.
 - tar members list without sizes.

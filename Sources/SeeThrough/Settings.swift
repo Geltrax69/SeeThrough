@@ -1,5 +1,6 @@
 import AppKit
 import Carbon.HIToolbox
+import ServiceManagement
 
 /// A handful of preset hotkeys. A full key recorder is a lot of code for a
 /// choice most people make once.
@@ -38,5 +39,19 @@ enum Settings {
     static var muteVideo: Bool {
         get { defaults.object(forKey: "muteVideo") as? Bool ?? true }
         set { defaults.set(newValue, forKey: "muteVideo") }
+    }
+
+    /// Read from the system rather than a stored flag, so the menu matches
+    /// Login Items even when the user changes it there.
+    static var openAtLogin: Bool {
+        get { SMAppService.mainApp.status == .enabled }
+        set {
+            do {
+                newValue ? try SMAppService.mainApp.register()
+                         : try SMAppService.mainApp.unregister()
+            } catch {
+                NSLog("SeeThrough: could not change login item — \(error)")
+            }
+        }
     }
 }

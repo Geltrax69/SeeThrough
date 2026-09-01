@@ -47,6 +47,11 @@ final class StatusItem: NSObject, NSMenuDelegate {
         mute.state = Settings.muteVideo ? .on : .off
         menu.addItem(mute)
 
+        let login = NSMenuItem(title: "Open at Login", action: #selector(toggleLogin), keyEquivalent: "")
+        login.target = self
+        login.state = Settings.openAtLogin ? .on : .off
+        menu.addItem(login)
+
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "SeeThrough \(version)", action: nil, keyEquivalent: ""))
         let quit = NSMenuItem(title: "Quit SeeThrough", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
@@ -67,4 +72,6 @@ final class StatusItem: NSObject, NSMenuDelegate {
     }
 
     @objc private func toggleMute() { Settings.muteVideo.toggle() }
+
+    @objc private func toggleLogin() { Settings.openAtLogin.toggle() }
 }
