@@ -10,7 +10,7 @@ enum PreviewFactory {
         let frame = NSRect(origin: .zero, size: size)
 
         if (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true {
-            return FolderPreview(url: url, frame: frame)
+            return FolderPreview.view(for: url, frame: frame)
         }
 
         if let type = type(of: url), type.conforms(to: .audiovisualContent) {
