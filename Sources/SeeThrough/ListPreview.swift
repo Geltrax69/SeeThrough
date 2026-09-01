@@ -66,14 +66,28 @@ final class ListPreview: NSView, NSTableViewDataSource, NSTableViewDelegate {
         }
 
         let cell = NSTableCellView()
-        let icon = NSImageView(frame: NSRect(x: 0, y: 2, width: 18, height: 18))
+        let icon = NSImageView()
         icon.image = row.icon
         let label = NSTextField(labelWithString: row.name)
-        label.frame = NSRect(x: 24, y: 2, width: (column?.width ?? 400) - 24, height: 18)
-        label.autoresizingMask = [.width]
         label.font = .systemFont(ofSize: 12)
-        cell.addSubview(icon)
-        cell.addSubview(label)
+        // Archive members are full paths; keep the tail, which is the part that
+        // tells one entry from another.
+        label.lineBreakMode = .byTruncatingHead
+        label.usesSingleLineMode = true
+
+        for view in [icon, label] as [NSView] {
+            view.translatesAutoresizingMaskIntoConstraints = false
+            cell.addSubview(view)
+        }
+        NSLayoutConstraint.activate([
+            icon.leadingAnchor.constraint(equalTo: cell.leadingAnchor),
+            icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
+            icon.widthAnchor.constraint(equalToConstant: 18),
+            icon.heightAnchor.constraint(equalToConstant: 18),
+            label.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 6),
+            label.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -8),
+            label.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
+        ])
         return cell
     }
 }

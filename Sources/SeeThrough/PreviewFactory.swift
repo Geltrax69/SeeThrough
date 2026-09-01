@@ -13,6 +13,10 @@ enum PreviewFactory {
             return FolderPreview.view(for: url, frame: frame)
         }
 
+        if ArchivePreview.handles(url) {
+            return ArchivePreview.view(for: url, frame: frame)
+        }
+
         if let type = type(of: url), type.conforms(to: .audiovisualContent) {
             return VideoPreview(url: url, frame: frame)
         }
