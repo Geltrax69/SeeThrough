@@ -28,7 +28,7 @@ final class VideoPreview: NSView {
 
     private func showPlayer(_ asset: AVURLAsset) {
         let player = AVPlayer(playerItem: AVPlayerItem(asset: asset))
-        player.isMuted = true          // a preview should not blast audio
+        player.isMuted = Settings.muteVideo
 
         let view = AVPlayerView(frame: bounds)
         view.player = player
