@@ -16,8 +16,11 @@ final class PreviewPanel: NSPanel {
 
     override var canBecomeKey: Bool { true }
 
-    func show(message: String) {
-        let label = NSTextField(labelWithString: message)
+    func show(_ urls: [URL]) {
+        let text = urls.isEmpty
+            ? "Nothing selected in Finder."
+            : urls.map(\.path).joined(separator: "\n")
+        let label = NSTextField(labelWithString: text)
         label.alignment = .center
         label.frame = NSRect(x: 0, y: 0, width: 720, height: 520)
         contentView = label
