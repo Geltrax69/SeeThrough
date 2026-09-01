@@ -10,7 +10,7 @@ enum PreviewFactory {
         let frame = NSRect(origin: .zero, size: size)
 
         if let type = type(of: url), type.conforms(to: .audiovisualContent) {
-            return VideoPreview.view(for: url, frame: frame)
+            return VideoPreview(url: url, frame: frame)
         }
 
         let ql = QLPreviewView(frame: frame, style: .normal) ?? QLPreviewView()
